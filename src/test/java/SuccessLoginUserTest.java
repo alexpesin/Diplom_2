@@ -1,3 +1,5 @@
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
 import org.example.user.User;
 import org.example.user.UserClient;
@@ -7,8 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertEquals;
 
 public class SuccessLoginUserTest {
 
@@ -17,7 +17,7 @@ public class SuccessLoginUserTest {
 
 
     @Before
-    public  void setUp(){
+    public void setUp() {
         userClient = new UserClient();
         user = UserGenerator.getUniqueUser();
         userClient.create(user);
@@ -25,7 +25,9 @@ public class SuccessLoginUserTest {
     }
 
     @Test
-    public void loginAsExistingUserShouldBeOKTest(){
+    @DisplayName("логин под существующим пользователем с валидными данными")
+    @Description("Проверка, что пользователь с валидным логином и паролем успешно логинится")
+    public void loginAsExistingUserShouldBeOKTest() {
 
         ValidatableResponse loginResponse = userClient.login(UserCredentials.getCredentials(user));
         int loginStatusCode = loginResponse.extract().statusCode();
@@ -34,14 +36,14 @@ public class SuccessLoginUserTest {
 
         String expectedUserName = user.getName();
         String actualUserName = loginResponse.extract().path("user.name");
+        user.checkStatusCodeEqualsStep(SC_OK, loginStatusCode);
+        String accessToken = "accessToken";
+        String refreshToken = "refreshToken";
+        user.checkResponseBodyContainsParameter(loginResponse, accessToken);
+        user.checkResponseBodyContainsParameter(loginResponse, refreshToken);
 
-        assertEquals(SC_OK, loginStatusCode);
-
-        loginResponse.assertThat().body("accessToken", notNullValue());
-        loginResponse.assertThat().body("refreshToken", notNullValue());
-
-        assertEquals(expectedUserEmail, actualUserEmail);
-        assertEquals(expectedUserName, actualUserName);
+        user.checkStringEqualsStep(expectedUserEmail, actualUserEmail);
+        user.checkStringEqualsStep(expectedUserName, actualUserName);
 
     }
 }

@@ -1,3 +1,5 @@
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
 import org.example.ingredient.Ingredient;
 import org.example.ingredient.IngredientClient;
@@ -44,6 +46,8 @@ public class CreateOrderTest {
     }
 
     @Test
+    @DisplayName("Создание заказа неавторизованным пользователем")
+    @Description("Проверка, что неавторизованный пользователь может создать заказ с добавлением ингредиентов")
     public void createNotAuthorizedOrderWithIngredientsShouldSuccessTest() {
         List<IngredientData> data = ingredientClient.getIngredients();
         List<String> ingredientIds = ingredient.getRandomIngredientData(data);
@@ -61,6 +65,8 @@ public class CreateOrderTest {
 
 
     @Test
+    @DisplayName("Создание заказа авторизованным пользователем")
+    @Description("Проверка, что авторизованный пользователь может создать заказ с добавлением ингредиентов")
     public void createAuthorizedOrderWithIngredientsShouldSuccessTest() {
 
         List<IngredientData> data = ingredientClient.getIngredients();
@@ -94,6 +100,8 @@ public class CreateOrderTest {
     }
 
     @Test
+    @DisplayName("Создание заказа без ингредиентов вызывает ошибку")
+    @Description("Проверка, что авторизованный пользователь НЕ может создать заказ без добавления ингредиентов")
     public void createAuthorizedOrderNoIngredientsShouldFailTest() {
 
         order = OrderGenerator.getOrderNoIngredients();
@@ -110,6 +118,8 @@ public class CreateOrderTest {
     }
 
     @Test
+    @DisplayName("Создание заказа с несуществующими ингредиентами вызывает ошибку")
+    @Description("Проверка, что авторизованный пользователь НЕ может создать заказ с неверным хешем ингредиентов (с несуществующими ингредиентами)")
     public void createAuthorizedOrderInvalidIngredientIdsShouldFailTest() {
         Random random = new Random();
         List<String> ingredientIds = List.of(String.valueOf(random.hashCode()));

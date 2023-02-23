@@ -1,5 +1,7 @@
 package org.example.ingredient;
 
+import io.qameta.allure.Step;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +24,8 @@ public class Ingredient {
         this.ingredientData = ingredientData;
     }
 
-    public List<String> getRandomIngredientData(List<IngredientData>data){
+    @Step("добавление в заказ рандомных ингредиентов из списка")
+    public List<String> getRandomIngredientData(List<IngredientData> data) {
 
         List<String> ids = data.stream().map(IngredientData::get_id).collect(Collectors.toList());
         List<String> randomIngredients = new ArrayList<>();

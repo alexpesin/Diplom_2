@@ -1,3 +1,5 @@
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
 import org.example.ingredient.Ingredient;
 import org.example.ingredient.IngredientClient;
@@ -15,7 +17,8 @@ import org.junit.Test;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.apache.http.HttpStatus.*;
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 
@@ -41,7 +44,9 @@ public class GetOrderTest {
     }
 
     @Test
-    public void getOrdersAuthorizedUserShouldSuccessTest(){
+    @DisplayName("Получение нескольких заказов конкретного авторизованного пользователя")
+    @Description("Проверка, что авторизованный пользователь может получить несколько заказов")
+    public void getOrdersAuthorizedUserShouldSuccessTest() {
         List<IngredientData> ingredientData = ingredientClient.getIngredients();
 
         List<String> firstOrderIngredientIds = ingredient.getRandomIngredientData(ingredientData);
@@ -70,7 +75,7 @@ public class GetOrderTest {
     }
 
     @Test
-    public void getOrdersNotAuthorizedUserShouldFailTest(){
+    public void getOrdersNotAuthorizedUserShouldFailTest() {
         List<IngredientData> ingredientData = ingredientClient.getIngredients();
 
         List<String> firstOrderIngredientIds = ingredient.getRandomIngredientData(ingredientData);

@@ -1,3 +1,5 @@
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
 import org.example.user.User;
 import org.example.user.UserClient;
@@ -7,8 +9,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.io.IOException;
+
 import static org.apache.http.HttpStatus.SC_FORBIDDEN;
-import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
 public class CreateUserNotAllRequiredFieldsParametrizedTest {
@@ -26,12 +29,14 @@ public class CreateUserNotAllRequiredFieldsParametrizedTest {
     }
 
     @BeforeClass
-    public static void setUp(){
+    public static void setUp() {
         userClient = new UserClient();
 
     }
-    @Parameterized.Parameters
-    public static Object[][] getUserData(){
+
+
+    @Parameterized.Parameters(name = "Тестовые данные: {0} {1} {2}")
+    public static Object[][] getUserData() {
         return new Object[][]{
 
                 {"", "", ""},
@@ -44,14 +49,19 @@ public class CreateUserNotAllRequiredFieldsParametrizedTest {
     }
 
     @Test
-    public void createUserNotAllRequiredFieldsShouldFailTest(){
+    @DisplayName("Создание пользователя c незаполненными обязательными полями вызывает ошибку")
+    @Description("Проверка, что нельзя создать пользователя если не заполнить одно из обязательных полей")
+    public void createUserNotAllRequiredFieldsShouldFailTest() throws IOException {
         User user = UserGenerator.getManuallyGeneratedUser(email, password, name);
         ValidatableResponse createResponse = userClient.create(user);
         int statusCode = createResponse.extract().statusCode();
         String actualMessage = createResponse.extract().path("message");
         String expectedMessage = "Email, password and name are required fields";
 
-        assertEquals(SC_FORBIDDEN, statusCode);
-        assertEquals(expectedMessage, actualMessage);
+        user.checkStatusCodeEqualsStep(SC_FORBIDDEN, statusCode);
+
+        user.checkStringEqualsStep(expectedMessage, actualMessage);
+
+
     }
 }

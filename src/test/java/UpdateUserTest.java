@@ -1,3 +1,5 @@
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.example.user.User;
@@ -15,14 +17,14 @@ public class UpdateUserTest {
     private String accessToken;
 
     @Before
-    public  void setUp(){
+    public void setUp() {
         userClient = new UserClient();
 
     }
 
     @Test
-    public void updateAuthorizedUserExistingEmailShouldFailTest(){
-        String userEmailInitial =  RandomStringUtils.randomAlphabetic(5).toLowerCase() + "@test.com";
+    public void updateAuthorizedUserExistingEmailShouldFailTest() {
+        String userEmailInitial = RandomStringUtils.randomAlphabetic(5).toLowerCase() + "@test.com";
         User userInitial = UserGenerator.getManuallyGeneratedUser(userEmailInitial, "Password", "Name");
         userClient.create(userInitial);
 
@@ -53,7 +55,9 @@ public class UpdateUserTest {
      * пароль почему-то в запрсе отсутствует и не меняется. Поэтому тест падает
      */
     @Test
-    public void updateAuthorizedUserDataShouldSuccessTest(){
+    @DisplayName("Изменение данных авторизованного пользователя")
+    @Description("Проверка, что любое поле можно изменить. ")
+    public void updateAuthorizedUserDataShouldSuccessTest() {
 
         User user = UserGenerator.getUniqueUser();
         userClient.create(user);
@@ -79,7 +83,9 @@ public class UpdateUserTest {
     }
 
     @Test
-    public void updateNotAuthorizedUserDataShouldFailTest(){
+    @DisplayName("Изменение данных неавторизованного пользователя возвращает ошибку")
+    @Description("Проверка, что нельзя редактировать данные неавторизованного пользователя ")
+    public void updateNotAuthorizedUserDataShouldFailTest() {
 
         User userNotAuthorized = UserGenerator.getUniqueUser();
         userClient.create(userNotAuthorized);

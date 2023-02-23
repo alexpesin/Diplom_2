@@ -1,5 +1,6 @@
 package org.example.user;
 
+import io.qameta.allure.Step;
 import io.restassured.response.ValidatableResponse;
 import org.example.client.Client;
 
@@ -7,8 +8,8 @@ import static io.restassured.RestAssured.given;
 import static org.example.user.UserEndPoints.*;
 
 public class UserClient extends Client {
-
-    public ValidatableResponse create(User user){
+    @Step("Создание пользователя")
+    public ValidatableResponse create(User user) {
         return given()
                 .log().all()
                 .spec(getSpec())
@@ -19,7 +20,8 @@ public class UserClient extends Client {
                 .log().all();
     }
 
-    public ValidatableResponse login(UserCredentials credentials){
+    @Step("Логин пользователем")
+    public ValidatableResponse login(UserCredentials credentials) {
         return given()
                 .log().all()
                 .spec(getSpec())
@@ -41,7 +43,7 @@ public class UserClient extends Client {
                 .log().all();
     }*/
 
-    public ValidatableResponse updateAuthorizedUserData(User user, String accessToken){
+    public ValidatableResponse updateAuthorizedUserData(User user, String accessToken) {
         return given()
                 .log().all()
                 .spec(getSpec())
@@ -53,7 +55,7 @@ public class UserClient extends Client {
                 .log().all();
     }
 
-    public ValidatableResponse updateNotAuthorizedUserData(User user){
+    public ValidatableResponse updateNotAuthorizedUserData(User user) {
         return given()
                 .log().all()
                 .spec(getSpec())
@@ -64,7 +66,7 @@ public class UserClient extends Client {
                 .log().all();
     }
 
-    public ValidatableResponse delete(){
+    public ValidatableResponse delete() {
         return given()
                 .spec(getSpec())
                 .log().all()
